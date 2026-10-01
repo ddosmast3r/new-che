@@ -34,11 +34,6 @@
   fill('[data-2gis-reviews]', (el) => { el.href = SITE.twoGisReviews; });
   fill('[data-yandex-rating]', (el) => { el.textContent = SITE.yandexRating; });
   fill('[data-2gis-rating]', (el) => { el.textContent = SITE.twoGisRating; });
-  const ratingOf = { yandex: SITE.yandexRating, '2gis': SITE.twoGisRating };
-  fill('[data-stars-of]', (el) => {
-    const r = parseFloat(String(ratingOf[el.dataset.starsOf]).replace(',', '.')) || 0;
-    el.style.setProperty('--fill', `${(r / 5) * 100}%`);
-  });
   fill('[data-route]', (el) => { el.href = `https://yandex.ru/maps/?rtext=~${SITE.lat},${SITE.lng}&rtt=auto`; });
   fill('[data-legal]', (el) => { el.textContent = SITE.legal; });
   fill('[data-year]', (el) => { el.textContent = new Date().getFullYear(); });
@@ -101,8 +96,7 @@
   const saveConsent = (v) => { try { localStorage.setItem(COOKIE_KEY, v); } catch { /* приватный режим */ } };
 
   function loadMetrika() {
-    const id = Number(SITE.metrikaId);
-    if (!id || window.ym) return;
+    if (!SITE.metrikaId || window.ym) return;
     /* стандартный код счётчика Яндекс Метрики */
     (function (m, e, t, r, i, k, a) {
       m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
@@ -110,8 +104,32 @@
       k = e.createElement(t); a = e.getElementsByTagName(t)[0];
       k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
-    window.ym(id, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
+    window.ym(SITE.metrikaId, 'init', { webvisor: true, clickmap: true, accurateTrackBounce: true, trackLinks: true });
+    if (SITE.metrikaBizId) {
+      window.ym(SITE.metrikaBizId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
+    }
   }
+
+  /* Цели — те же идентификаторы, что на прежнем cheshashlik.ru, чтобы не заводить их заново.
+     Определяются по ссылке; data-goal на элементе имеет приоритет. */
+  function goalsFor(a) {
+    if (a.dataset.goal) return [a.dataset.goal, a.dataset.goalBiz];
+    const href = a.getAttribute('href') || '';
+    if (href.startsWith('tel:')) return ['click_phone', 'make-call'];
+    if (href.includes('wa.me')) return ['click_whatsapp'];
+    if (href.includes('t.me/')) return ['click_telegram'];
+    if (href.includes('max.ru')) return ['click_max'];
+    if (href.includes('2gis.ru')) return [href.includes('/reviews') ? 'click_reviews' : 'click_2gis'];
+    if (href.includes('yandex.ru/maps')) return [href.includes('/reviews') ? 'click_reviews' : 'click_route', href.includes('/reviews') ? null : 'make-route'];
+    return [];
+  }
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest('a[href], [data-goal]');
+    if (!a || typeof window.ym !== 'function') return;
+    const [goal, biz] = goalsFor(a);
+    if (goal) window.ym(SITE.metrikaId, 'reachGoal', goal);
+    if (biz && SITE.metrikaBizId) window.ym(SITE.metrikaBizId, 'reachGoal', biz);
+  });
 
   const consent = readConsent();
   if (consent === 'yes') loadMetrika();
@@ -150,7 +168,7 @@
     ? '<span class="price--ask">цену уточняйте</span>'
     : `<span class="price">${esc(fmt(p))} <small>₽</small></span>`;
 
-  const state = { book: 'kitchen', cat: MENU.kitchen[0].id };
+  const state = { cat: MENU.kitchen[0].id };
   const nav = $('#menu-nav');
   const body = $('#menu-body');
 
@@ -171,44 +189,31 @@
     </div>`;
 
   function renderNav() {
-    nav.innerHTML = MENU[state.book].map((c, n) =>
+    nav.innerHTML = MENU.kitchen.map((c, n) =>
       `<button type="button" class="${c.id === state.cat ? 'is-on' : ''}" aria-current="${c.id === state.cat}" data-cat="${c.id}"><span>${String(n + 1).padStart(2, '0')}</span>${esc(c.title)}</button>`
     ).join('');
   }
 
   function renderCat() {
-    const cat = MENU[state.book].find((c) => c.id === state.cat);
+    const cat = MENU.kitchen.find((c) => c.id === state.cat);
     body.innerHTML = `
       <div class="cat">
         <div class="cat__head">
           <h3 class="cat__title">${esc(cat.title)}</h3>
           ${cat.note ? `<p class="cat__note">${esc(cat.note)}</p>` : ''}
-          ${cat.alcohol ? '<p class="cat__note">Только в ресторане — алкоголь не доставляем</p>' : ''}
         </div>
         ${cat.list
           ? `<div class="list">${cat.items.map(listRow).join('')}</div>`
           : `<div class="grid">${cat.items.map(dishCard).join('')}</div>`}
         <div class="cat__cta">
-          <span>${cat.alcohol ? 'Забронировать стол?' : 'Заказать с доставкой?'}</span>
+          <span>Заказать с доставкой?</span>
           <a class="b b--fill b--sm" data-phone-link href="#"><svg><use href="#i-phone"/></svg>Позвонить</a>
-          <a class="b b--sm" data-wa="${cat.alcohol ? 'booking' : 'delivery'}" href="#" target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>WhatsApp</a>
+          <a class="b b--sm" data-wa="delivery" href="#" target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>WhatsApp</a>
           <a class="b b--sm" data-tg href="#" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Telegram</a>
           <a class="b b--sm" data-max href="#" target="_blank" rel="noopener"><svg><use href="#i-max"/></svg>MAX</a>
         </div>
       </div>`;
     applyContacts(body);
-  }
-
-  function setBook(book) {
-    state.book = book;
-    state.cat = MENU[book][0].id;
-    $$('.tabs .b').forEach((b) => {
-      const on = b.dataset.book === book;
-      b.classList.toggle('is-on', on);
-      b.setAttribute('aria-selected', on);
-    });
-    renderNav();
-    renderCat();
   }
 
   function setCat(id) {
@@ -221,7 +226,6 @@
     if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  $$('.tabs .b').forEach((b) => b.addEventListener('click', () => setBook(b.dataset.book)));
   nav.addEventListener('click', (e) => {
     const b = e.target.closest('[data-cat]');
     if (b) setCat(b.dataset.cat);
