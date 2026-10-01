@@ -27,7 +27,7 @@
 
   fill('[data-address]', (el) => { el.textContent = SITE.address; });
   fill('[data-address-short-full]', (el) => { el.textContent = 'Пятигорск, ' + SITE.addressShort; });
-  fill('[data-instagram]', (el) => { el.href = 'https://instagram.com/' + SITE.instagram; el.textContent = '@' + SITE.instagram; });
+  fill('[data-instagram]', (el) => { el.href = 'https://instagram.com/' + SITE.instagram; el.textContent = 'Instagram @' + SITE.instagram; });
   fill('[data-yandex]', (el) => { el.href = SITE.yandexOrg; });
   fill('[data-2gis]', (el) => { el.href = SITE.twoGis; });
   fill('[data-yandex-reviews]', (el) => { el.href = SITE.yandexReviews; });

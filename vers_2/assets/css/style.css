@@ -293,6 +293,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 .foot__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 24px; padding: 18px 0; width: min(760px, 100%); border-top: 1px solid rgba(227, 220, 203, .14); border-bottom: 1px solid rgba(227, 220, 203, .14); font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; }
 .foot__links a, .foot__links button { color: var(--cream); text-decoration: none; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; }
 .foot__links a:hover, .foot__links button:hover { text-decoration: underline; text-underline-offset: 4px; }
+.foot__star { margin-left: -22px; color: var(--cream); }
 .foot__legal { margin: 0; max-width: 760px; font-family: var(--f-mono); font-size: 11px; letter-spacing: .03em; line-height: 1.7; }
 
 /* ---------- плавающая навигация ---------- */
@@ -369,7 +370,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
   box-shadow: 0 14px 40px rgba(0, 0, 0, .35);
   font-size: 14px; line-height: 1.5;
 }
-.cookie p { margin: 0; }
+.cookie p { margin: 0; font-size: 13px; }
 .cookie a { color: var(--red); }
 .cookie__btns { display: flex; gap: 8px; flex: none; }
 @media (max-width: 860px) {
