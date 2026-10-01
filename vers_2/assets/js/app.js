@@ -10,9 +10,9 @@
   /* ---------- контакты из config.js ---------- */
   const tel = 'tel:' + SITE.phoneRaw;
   const waText = {
-    hello: 'Здравствуйте! Пишу с сайта «Чё? Шашлык».',
-    delivery: 'Здравствуйте! Хочу заказать доставку из «Чё? Шашлык».',
-    booking: 'Здравствуйте! Хочу забронировать стол в «Чё? Шашлык».',
+    hello: 'Здравствуйте! Пишу с сайта.',
+    delivery: 'Здравствуйте! Хочу заказать доставку.',
+    booking: 'Здравствуйте! Хочу забронировать стол.',
   };
   const waLink = (kind) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(waText[kind] || waText.hello)}`;
 
@@ -46,7 +46,7 @@
     const isOpen = h >= SITE.open && h < SITE.close;
     fill('[data-status]', (el) => {
       el.classList.toggle('is-open', isOpen);
-      el.textContent = isOpen ? 'открыто до 00:00' : `закрыто · с ${SITE.open}:00`;
+      el.textContent = isOpen ? 'открыто' : 'закрыто';
     });
   }
   renderStatus();
@@ -94,20 +94,45 @@
   const banner = $('#cookie');
   const readConsent = () => { try { return localStorage.getItem(COOKIE_KEY); } catch { return null; } };
   const saveConsent = (v) => { try { localStorage.setItem(COOKIE_KEY, v); } catch { /* приватный режим */ } };
+  let consent = readConsent();
+  let metrikaActive = false;
+  let metrikaReady = false;
+  let metrikaLoading = false;
 
-  function loadMetrika() {
-    if (!SITE.metrikaId || window.ym) return;
-    /* стандартный код счётчика Яндекс Метрики */
-    (function (m, e, t, r, i, k, a) {
-      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
-      m[i].l = 1 * new Date();
-      k = e.createElement(t); a = e.getElementsByTagName(t)[0];
-      k.async = 1; k.src = r; a.parentNode.insertBefore(k, a);
-    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js', 'ym');
+  function startMetrika() {
+    if (consent !== 'yes' || metrikaActive) return;
+    metrikaActive = true;
     window.ym(SITE.metrikaId, 'init', { webvisor: true, clickmap: true, accurateTrackBounce: true, trackLinks: true });
     if (SITE.metrikaBizId) {
       window.ym(SITE.metrikaBizId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
     }
+  }
+
+  function loadMetrika() {
+    if (!SITE.metrikaId || metrikaActive) return;
+    if (metrikaReady) { startMetrika(); return; }
+    if (metrikaLoading) return;
+    metrikaLoading = true;
+    window.ym = window.ym || function () { (window.ym.a = window.ym.a || []).push(arguments); };
+    window.ym.l = Date.now();
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = 'https://mc.yandex.ru/metrika/tag.js';
+    script.onload = () => {
+      metrikaLoading = false;
+      metrikaReady = true;
+      // Согласие могли отозвать, пока загружался скрипт.
+      startMetrika();
+    };
+    script.onerror = () => { metrikaLoading = false; script.remove(); };
+    document.head.append(script);
+  }
+
+  function stopMetrika() {
+    if (!metrikaActive) return;
+    metrikaActive = false;
+    window.ym(SITE.metrikaId, 'destruct');
+    if (SITE.metrikaBizId) window.ym(SITE.metrikaBizId, 'destruct');
   }
 
   /* Цели — те же идентификаторы, что на прежнем cheshashlik.ru, чтобы не заводить их заново.
@@ -125,42 +150,72 @@
   }
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href], [data-goal]');
-    if (!a || typeof window.ym !== 'function') return;
+    if (!a || consent !== 'yes' || !metrikaActive || typeof window.ym !== 'function') return;
     const [goal, biz] = goalsFor(a);
     if (goal) window.ym(SITE.metrikaId, 'reachGoal', goal);
     if (biz && SITE.metrikaBizId) window.ym(SITE.metrikaBizId, 'reachGoal', biz);
   });
 
-  const consent = readConsent();
   if (consent === 'yes') loadMetrika();
   else if (!consent) banner.hidden = false;
 
   $$('[data-cookie]', banner).forEach((b) => b.addEventListener('click', () => {
-    saveConsent(b.dataset.cookie);
+    consent = b.dataset.cookie;
+    saveConsent(consent);
     banner.hidden = true;
-    if (b.dataset.cookie === 'yes') loadMetrika();
+    if (consent === 'yes') loadMetrika();
+    else stopMetrika();
   }));
   $$('[data-cookie-settings]').forEach((b) => b.addEventListener('click', () => { banner.hidden = false; }));
+  window.addEventListener('storage', (e) => {
+    if (e.key !== COOKIE_KEY && e.key !== null) return;
+    consent = readConsent();
+    banner.hidden = !!consent;
+    if (consent === 'yes') loadMetrika();
+    else stopMetrika();
+  });
 
   /* ---------- окно «Написать нам» ---------- */
   const sheet = $('#contacts');
+  const sheetBackground = $$('.page, .pill, .dock, #cookie');
   let lastFocus = null;
+  let sheetOpen = false;
+  let sheetCloseTimer;
   const openSheet = () => {
+    if (sheetOpen) return;
+    clearTimeout(sheetCloseTimer);
+    sheetOpen = true;
     lastFocus = document.activeElement;
     sheet.hidden = false;
+    sheetBackground.forEach((el) => { el.inert = true; });
     document.body.classList.add('no-scroll');
-    requestAnimationFrame(() => sheet.classList.add('is-open'));
-    $('.sheet__list a', sheet).focus();
+    requestAnimationFrame(() => { if (sheetOpen) sheet.classList.add('is-open'); });
+    $('.sheet__list a', sheet).focus({ preventScroll: true });
   };
   const closeSheet = () => {
+    if (!sheetOpen) return;
+    sheetOpen = false;
     sheet.classList.remove('is-open');
+    sheetBackground.forEach((el) => { el.inert = false; });
     document.body.classList.remove('no-scroll');
-    setTimeout(() => { sheet.hidden = true; }, 250);
-    if (lastFocus) lastFocus.focus();
+    sheetCloseTimer = setTimeout(() => { sheet.hidden = true; }, 250);
+    if (lastFocus?.isConnected) lastFocus.focus({ preventScroll: true });
   };
   $$('[data-open-contacts]').forEach((b) => b.addEventListener('click', openSheet));
   $$('[data-close], .sheet__list a', sheet).forEach((b) => b.addEventListener('click', closeSheet));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !sheet.hidden) closeSheet(); });
+  document.addEventListener('keydown', (e) => {
+    if (!sheetOpen) return;
+    if (e.key === 'Escape') { e.preventDefault(); closeSheet(); }
+    if (e.key !== 'Tab') return;
+    const focusable = $$('button, a[href]', sheet);
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
 
   /* ---------- меню ---------- */
   const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
@@ -206,7 +261,7 @@
           ? `<div class="list">${cat.items.map(listRow).join('')}</div>`
           : `<div class="grid">${cat.items.map(dishCard).join('')}</div>`}
         <div class="cat__cta">
-          <span>Заказать с доставкой?</span>
+          <span>Заказать домой</span>
           <a class="b b--fill b--sm" data-phone-link href="#"><svg><use href="#i-phone"/></svg>Позвонить</a>
           <a class="b b--sm" data-wa="delivery" href="#" target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>WhatsApp</a>
           <a class="b b--sm" data-tg href="#" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Telegram</a>
@@ -218,12 +273,17 @@
 
   function setCat(id) {
     state.cat = id;
-    renderNav();
+    $$('[data-cat]', nav).forEach((button) => {
+      const selected = button.dataset.cat === id;
+      button.classList.toggle('is-on', selected);
+      button.setAttribute('aria-current', String(selected));
+    });
     renderCat();
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
     const on = $('.is-on', nav);
-    if (on && nav.scrollWidth > nav.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+    if (on && nav.scrollWidth > nav.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'center', behavior });
     const top = body.getBoundingClientRect().top + window.scrollY - (window.innerWidth <= 860 ? 80 : 100);
-    if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
+    if (window.scrollY > top) window.scrollTo({ top, behavior });
   }
 
   nav.addEventListener('click', (e) => {

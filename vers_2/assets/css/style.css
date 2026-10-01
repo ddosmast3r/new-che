@@ -63,9 +63,8 @@ button { font: inherit; color: inherit; }
 .addr { display: inline-block; margin: 0; color: var(--red); font-size: 19px; font-weight: 500; text-decoration: none; }
 a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 
-.hours { margin: 0; display: grid; gap: 4px; }
-.hours div { display: flex; gap: 10px; }
-.hours dt { min-width: 120px; }
+.hours { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; }
+.hours div { display: contents; }
 .hours dd { margin: 0; }
 .hours a { text-decoration: none; }
 
@@ -234,7 +233,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 @media (max-width: 560px) {
   .grid { grid-template-columns: 1fr; gap: 14px; }
   .dish { display: grid; grid-template-columns: 116px 1fr; gap: 0 14px; }
-  .dish .window { grid-row: span 3; aspect-ratio: auto; height: 100%; min-height: 120px; margin: 0; }
+  .dish .window { grid-row: span 3; align-self: start; aspect-ratio: 1 / 1; height: auto; margin: 0; }
   .dish__name { font-size: 15px; align-self: start; }
   .dish__desc { align-self: start; font-size: 13px; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .dish__foot { padding-top: 6px; }
@@ -298,6 +297,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 
 /* ---------- плавающая навигация ---------- */
 .pill {
+  visibility: hidden;
   position: fixed; z-index: 50; top: 14px; left: 50%;
   display: flex; align-items: center; gap: 4px;
   padding: 6px 6px 6px 16px;
@@ -309,7 +309,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
   transition: transform .35s ease;
   color: var(--cream);
 }
-.pill.is-shown { transform: translate(-50%, 0); }
+.pill.is-shown { visibility: visible; transform: translate(-50%, 0); }
 .pill__logo img { height: 26px; width: auto; margin-right: 10px; }
 .pill > a:not(.pill__logo):not(.pill__call) { padding: 8px 12px; font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; text-decoration: none; opacity: .8; border-radius: 4px; white-space: nowrap; }
 .pill > a:not(.pill__logo):not(.pill__call):hover { opacity: 1; background: rgba(227, 220, 203, .08); }
@@ -321,6 +321,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 .dock { display: none; }
 @media (max-width: 860px) {
   .dock {
+    visibility: hidden;
     position: fixed; z-index: 60;
     left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom));
     display: grid; grid-template-columns: 1.3fr 1fr; gap: 6px;
@@ -330,7 +331,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
     box-shadow: 0 10px 30px rgba(0, 0, 0, .3);
     transform: translateY(160%); transition: transform .35s ease;
   }
-  .dock.is-shown { transform: none; }
+  .dock.is-shown { visibility: visible; transform: none; }
   .dock__call, .dock__msg {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     min-height: 50px; border-radius: 4px; border: 0; cursor: pointer; text-decoration: none;
@@ -346,13 +347,14 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 .no-scroll { overflow: hidden; }
 .sheet { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; }
 .sheet__backdrop { position: absolute; inset: 0; background: rgba(20, 18, 22, .6); opacity: 0; transition: opacity .25s; }
-.sheet__panel { position: relative; width: min(400px, calc(100% - 24px)); background: var(--card); border-radius: var(--r-card); padding: 22px; transform: translateY(16px); opacity: 0; transition: transform .25s, opacity .25s; }
+.sheet__panel { position: relative; width: min(400px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow-y: auto; background: var(--card); border-radius: var(--r-card); padding: 22px; transform: translateY(16px); opacity: 0; transition: transform .25s, opacity .25s; }
 .sheet.is-open .sheet__backdrop { opacity: 1; }
 .sheet.is-open .sheet__panel { transform: none; opacity: 1; }
 .sheet__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
 .sheet__close { width: 40px; height: 40px; border: 1.5px solid var(--line); border-radius: 4px; background: none; cursor: pointer; display: grid; place-items: center; }
 .sheet__close svg { width: 18px; height: 18px; }
 .sheet__list { display: grid; gap: 8px; }
+.sheet__list [data-phone-link] { flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
 @media (max-width: 860px) {
   .sheet { place-items: end center; }
   .sheet__panel { width: 100%; border-radius: var(--r-card) var(--r-card) 0 0; padding-bottom: calc(22px + env(safe-area-inset-bottom)); transform: translateY(100%); opacity: 1; }
@@ -369,20 +371,22 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
   background: var(--card); color: var(--ink);
   box-shadow: 0 14px 40px rgba(0, 0, 0, .35);
   font-size: 14px; line-height: 1.5;
+  max-height: calc(100dvh - 40px); overflow-y: auto;
 }
 .cookie p { margin: 0; font-size: 13px; }
 .cookie a { color: var(--red); }
 .cookie__btns { display: flex; gap: 8px; flex: none; }
 @media (max-width: 860px) {
-  .cookie { flex-direction: column; align-items: stretch; bottom: calc(80px + env(safe-area-inset-bottom)); }
+  .cookie { flex-direction: column; align-items: stretch; bottom: calc(80px + env(safe-area-inset-bottom)); max-height: calc(100dvh - 100px - env(safe-area-inset-bottom)); }
   .cookie__btns .b { flex: 1; }
 }
+@media (max-width: 440px) { .cookie__btns { flex-direction: column; } }
 
 /* ---------- страница документа ---------- */
 .doc { padding: var(--pad); max-width: 860px; margin: 0 auto; width: 100%; }
 .doc__back { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
 .doc__back:hover { color: var(--ink); }
-.doc h1 { margin: 28px 0 8px; }
+.doc h1 { margin: 28px 0 8px; overflow-wrap: anywhere; }
 .doc h2 { margin: 36px 0 10px; font-family: var(--f-serif); font-size: 30px; font-weight: 700; line-height: 1.1; }
 .doc p, .doc li { color: #3d3531; }
 .doc ul { padding-left: 22px; }
