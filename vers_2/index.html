@@ -447,14 +447,16 @@
       aria-label="Уведомление об использовании cookie"
       hidden
     >
-      <p>
-        Мы используем cookie и Яндекс Метрику, чтобы понимать, как гости
-        пользуются сайтом. Нажимая «Принять», вы даёте согласие на обработку
-        данных (cookie, IP-адрес, сведения о действиях на сайте) ИП Егоян
-        Л. Д. с помощью Яндекс Метрики на условиях
-        <a href="/privacy.html#cookie">политики конфиденциальности</a>. Согласие
-        можно отозвать в «Настройках cookie» внизу сайта.
-      </p>
+      <div class="cookie__text">
+        <p class="cookie__title">Сайт использует cookie</p>
+        <p>Это нужно Яндекс Метрике, чтобы мы видели, как гости пользуются сайтом.</p>
+        <p class="cookie__legal">
+          Нажимая «Принять», вы соглашаетесь, что ИП Егоян Л. Д. обрабатывает
+          cookie, IP-адрес и данные о действиях на сайте с помощью Яндекс Метрики
+          по <a href="/privacy.html#cookie">политике конфиденциальности</a>.
+          Передумать можно в «Настройках cookie» внизу страницы.
+        </p>
+      </div>
       <div class="cookie__btns">
         <button type="button" class="b b--fill b--sm" data-cookie="yes">
           Принять
@@ -467,6 +469,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+    <script src="/assets/js/typo.js"></script>
     <script src="/assets/js/config.js"></script>
     <script src="/assets/js/menu-data.js"></script>
     <script src="/assets/js/app.js"></script>

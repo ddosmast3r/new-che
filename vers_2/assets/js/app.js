@@ -221,11 +221,12 @@
   const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   const priceHtml = (p) => (p === null || p === undefined)
     ? '<span class="price--ask">цену уточняйте</span>'
-    : `<span class="price">${esc(fmt(p))} <small>₽</small></span>`;
+    : `<span class="price">${esc(fmt(p))} <small>руб.</small></span>`;
 
   const state = { cat: MENU.kitchen[0].id };
   const nav = $('#menu-nav');
   const body = $('#menu-body');
+  const menuCard = $('#menu');
 
   const dishCard = (it) => `
     <article class="dish${it.img ? '' : ' dish--noimg'}">
@@ -249,8 +250,12 @@
     ).join('');
   }
 
+  /* фон раздела — как страницы печатного меню */
+  const TONE = { cold: 'beige', salads: 'olive', soups: 'beige', sides: 'beige', sauces: 'beige' };
+
   function renderCat() {
     const cat = MENU.kitchen.find((c) => c.id === state.cat);
+    menuCard.dataset.tone = TONE[cat.id] || 'light';
     body.innerHTML = `
       <div class="cat">
         <div class="cat__head">
@@ -259,7 +264,10 @@
         </div>
         ${cat.list
           ? `<div class="list">${cat.items.map(listRow).join('')}</div>`
-          : `<div class="grid">${cat.items.map(dishCard).join('')}</div>`}
+          : `<div class="grid">${cat.items.filter((it) => it.img).map(dishCard).join('')}</div>
+             ${cat.items.some((it) => !it.img)
+               ? `<div class="list list--extra">${cat.items.filter((it) => !it.img).map(listRow).join('')}</div>`
+               : ''}`}
         <div class="cat__cta">
           <span>Заказать домой</span>
           <a class="b b--fill b--sm" data-phone-link href="#"><svg><use href="#i-phone"/></svg>Позвонить</a>
@@ -269,6 +277,7 @@
         </div>
       </div>`;
     applyContacts(body);
+    if (window.typo) window.typo(body);
   }
 
   function setCat(id) {
