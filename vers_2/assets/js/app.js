@@ -230,7 +230,7 @@
 
   const dishCard = (it) => `
     <article class="dish${it.img ? '' : ' dish--noimg'}">
-      ${it.img ? `<div class="window"><img src="${IMG + it.img}.jpg" alt="${esc(it.name)}" loading="lazy">${it.chef ? '<span class="seal">Шеф советует</span>' : ''}</div>` : ''}
+      ${it.img ? `<button type="button" class="window window--zoom" data-photo="${esc(it.img)}" aria-label="Открыть фото: ${esc(it.name)}"><img src="${IMG + it.img}.jpg" alt="${esc(it.name)}" loading="lazy">${it.chef ? '<span class="seal">Шеф советует</span>' : ''}</button>` : ''}
       <h4 class="dish__name">${esc(it.name)}</h4>
       ${it.desc ? `<p class="dish__desc">${esc(it.desc)}</p>` : ''}
       <div class="dish__foot"><span class="w">${esc(it.w || '')}</span>${priceHtml(it.price)}</div>
@@ -299,6 +299,23 @@
     const b = e.target.closest('[data-cat]');
     if (b) setCat(b.dataset.cat);
   });
+
+  /* фото блюда крупно: закрывается крестиком, Esc или нажатием в любом месте */
+  const photo = $('#photo');
+  body.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-photo]');
+    if (!b) return;
+    const it = MENU.kitchen.find((c) => c.id === state.cat).items.find((i) => i.img === b.dataset.photo);
+    const img = $('.photo__img', photo);
+    img.src = IMG + it.img + '.jpg';
+    img.alt = it.name;
+    $('.photo__cap', photo).innerHTML = `<span class="photo__name">${esc(it.name)}</span><span class="w">${esc(it.w || '')}</span>${priceHtml(it.price)}`;
+    if (window.typo) window.typo(photo);
+    photo.showModal();
+    document.body.classList.add('no-scroll');
+  });
+  photo.addEventListener('click', () => photo.close());
+  photo.addEventListener('close', () => document.body.classList.remove('no-scroll'));
 
   renderNav();
   renderCat();
