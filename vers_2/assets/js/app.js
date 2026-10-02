@@ -10,9 +10,7 @@
   /* ---------- контакты из config.js ---------- */
   const tel = 'tel:' + SITE.phoneRaw;
   const waText = {
-    hello: 'Здравствуйте! Пишу с сайта.',
-    delivery: 'Здравствуйте! Хочу заказать доставку.',
-    booking: 'Здравствуйте! Хочу забронировать стол.',
+    hello: 'Здравствуйте!',
   };
   const waLink = (kind) => `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(waText[kind] || waText.hello)}`;
 
@@ -201,7 +199,8 @@
     sheetCloseTimer = setTimeout(() => { sheet.hidden = true; }, 250);
     if (lastFocus?.isConnected) lastFocus.focus({ preventScroll: true });
   };
-  $$('[data-open-contacts]').forEach((b) => b.addEventListener('click', openSheet));
+  // кнопка «Написать» есть и в меню, которое перерисовывается, поэтому слушаем весь документ
+  document.addEventListener('click', (e) => { if (e.target.closest('[data-open-contacts]')) openSheet(); });
   $$('[data-close], .sheet__list a', sheet).forEach((b) => b.addEventListener('click', closeSheet));
   document.addEventListener('keydown', (e) => {
     if (!sheetOpen) return;
@@ -271,9 +270,7 @@
         <div class="cat__cta">
           <span>Заказать домой</span>
           <a class="b b--fill b--sm" data-phone-link href="#"><svg><use href="#i-phone"/></svg>Позвонить</a>
-          <a class="b b--sm" data-wa="delivery" href="#" target="_blank" rel="noopener"><svg><use href="#i-wa"/></svg>WhatsApp</a>
-          <a class="b b--sm" data-tg href="#" target="_blank" rel="noopener"><svg><use href="#i-tg"/></svg>Telegram</a>
-          <a class="b b--sm" data-max href="#" target="_blank" rel="noopener"><svg><use href="#i-max"/></svg>MAX</a>
+          <button class="b b--sm" type="button" data-open-contacts><svg><use href="#i-chat"/></svg>Написать</button>
         </div>
       </div>`;
     applyContacts(body);
@@ -300,19 +297,31 @@
     if (b) setCat(b.dataset.cat);
   });
 
-  /* фото блюда крупно: закрывается крестиком, Esc или нажатием в любом месте */
+  /* фото крупно (блюда и интерьер): закрывается крестиком, Esc или нажатием в любом месте */
   const photo = $('#photo');
+  function showPhoto(src, alt, caption, tall) {
+    const img = $('.photo__img', photo);
+    img.src = src;
+    img.alt = alt;
+    photo.setAttribute('aria-label', `Фото: ${alt}`);
+    photo.classList.toggle('photo--tall', tall);
+    $('.photo__cap', photo).innerHTML = caption;
+    if (window.typo) window.typo(photo);
+    photo.showModal();
+    document.body.classList.add('no-scroll');
+  }
   body.addEventListener('click', (e) => {
     const b = e.target.closest('[data-photo]');
     if (!b) return;
     const it = MENU.kitchen.find((c) => c.id === state.cat).items.find((i) => i.img === b.dataset.photo);
-    const img = $('.photo__img', photo);
-    img.src = IMG + it.img + '.jpg';
-    img.alt = it.name;
-    $('.photo__cap', photo).innerHTML = `<span class="photo__name">${esc(it.name)}</span><span class="w">${esc(it.w || '')}</span>${priceHtml(it.price)}`;
-    if (window.typo) window.typo(photo);
-    photo.showModal();
-    document.body.classList.add('no-scroll');
+    showPhoto(IMG + it.img + '.jpg', it.name,
+      `<span class="photo__name">${esc(it.name)}</span><span class="w">${esc(it.w || '')}</span>${priceHtml(it.price)}`, false);
+  });
+  $('#interior').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-full]');
+    if (!b) return;
+    const alt = $('img', b).alt;
+    showPhoto(b.dataset.full, alt, `<span class="photo__name">${esc(alt)}</span>`, true);
   });
   photo.addEventListener('click', () => photo.close());
   photo.addEventListener('close', () => document.body.classList.remove('no-scroll'));
