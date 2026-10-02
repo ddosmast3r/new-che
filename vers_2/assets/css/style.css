@@ -412,7 +412,7 @@ a.addr:hover { text-decoration: underline; text-underline-offset: 4px; }
 .doc { padding: var(--pad); max-width: 860px; margin: 0 auto; width: 100%; }
 .doc__back { font-family: var(--f-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); text-decoration: none; }
 .doc__back:hover { color: var(--ink); }
-.doc h1 { margin: 28px 0 8px; overflow-wrap: anywhere; }
+.doc h1 { margin: 28px 0 8px; font-size: min(clamp(40px, 4.6vw, 64px), 8.8vw); overflow-wrap: anywhere; }
 .doc h2 { margin: 36px 0 10px; font-family: var(--f-serif); font-size: 30px; font-weight: 700; line-height: 1.1; }
 .doc p, .doc li { color: #3d3531; font-size: 17px; line-height: 1.65; max-width: 68ch; }
 .doc li + li { margin-top: 6px; }
