@@ -33,8 +33,9 @@ for (const name of ['okno-vecher', 'stol-kompaniya', 'okno-sobor', 'divany', 'de
 // Wide hall photo for the first screen: landscape for desktop, a 5:4 crop for phones.
 await convert('img/hero/hero-1.jpg', 'img/hero/hero-1-800.webp', 800);
 await convert('img/hero/hero-1.jpg', 'img/hero/hero-1-1280.webp', 1280);
-for (const width of [480, 800]) {
+// Главный снимок на телефоне — элемент LCP, поэтому 700 и 800 px сжаты сильнее (разница не видна).
+for (const width of [480, 700, 800]) {
   await sharp(root + 'img/hero/hero-1.jpg').extract({ left: 449, top: 0, width: 1176, height: 941 })
-    .resize({ width }).webp({ quality: width > 480 ? 72 : 78, effort: 6 }).toFile(root + `img/hero/hero-1-m${width}.webp`);
+    .resize({ width }).webp({ quality: width > 480 ? 60 : 78, effort: 6 }).toFile(root + `img/hero/hero-1-m${width}.webp`);
 }
 console.log(`Generated display images: ${Math.round(resultBytes / 1024)} KiB (source inputs: ${Math.round(sourceBytes / 1024)} KiB, originals preserved).`);
