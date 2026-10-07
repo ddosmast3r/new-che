@@ -156,6 +156,7 @@ a.addr:hover .addr__street { text-decoration: underline; text-decoration-thickne
 .hero__reel.is-moving .hero__photos { grid-template-rows: none; grid-auto-rows: max-content; align-content: start; overflow-y: auto; scrollbar-width: none; }
 .hero__reel.is-moving .hero__photos::-webkit-scrollbar { display: none; }
 .hero__reel.is-moving .hero__photos .window { height: auto; aspect-ratio: 4 / 5; }
+.hero__reel.is-moving .hero__photos li { will-change: transform; }
 .b { min-width: 0; }
 @media (max-width: 860px) {
   .hero { display: block; }

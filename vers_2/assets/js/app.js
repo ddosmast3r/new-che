@@ -60,11 +60,13 @@
     dock.classList.toggle('is-shown', past);
   }).observe(hero);
 
-  /* ---------- лента фото интерьера в шапке: сама медленно листается по кругу ---------- */
-  // Клиенту нравится движение. Лента — обычная прокручиваемая полоса: колесо мыши, тачпад
-  // и палец работают как везде. Пока курсор над лентой, её листают или фото выбрано
-  // с клавиатуры, автопрокрутка ждёт. Копии фото нужны для бесконечного круга, они скрыты
-  // от экранного диктора и клавиатуры, но открываются по нажатию.
+  /* ---------- лента фото интерьера в шапке: сама медленно едет по кругу ---------- */
+  // Клиенту нравится движение. Пока посетитель ничего не трогает, ленту двигает анимация
+  // transform: она плавная и на iPhone (прокрутка через scrollLeft там идёт рывками,
+  // Safari округляет её до целых пикселей). Как только ленту трогают, наводят курсор или
+  // выбирают фото с клавиатуры, анимация снимается и лента становится обычной прокручиваемой
+  // полосой с той же позиции. Через несколько секунд без действий движение продолжается.
+  // Копии фото нужны для бесконечного круга; они скрыты от экранного диктора и клавиатуры.
   const reel = $('.hero__reel');
   const strip = reel && $('.hero__photos', reel);
   if (strip && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -84,57 +86,62 @@
     const dialog = $('#photo');
     const read = () => (vertical.matches ? strip.scrollTop : strip.scrollLeft);
     const write = (v) => { if (vertical.matches) strip.scrollTop = v; else strip.scrollLeft = v; };
-    // длина одного круга: от первого фото до его копии
+    // длина одного круга: от первого фото до его копии (transform на offsetTop/offsetLeft не влияет)
     const lap = () => {
-      const a = originals[0];
-      const b = strip.children[originals.length];
-      return vertical.matches ? b.offsetTop - a.offsetTop : b.offsetLeft - a.offsetLeft;
+      const first = originals[0];
+      const copy = strip.children[originals.length];
+      return vertical.matches ? copy.offsetTop - first.offsetTop : copy.offsetLeft - first.offsetLeft;
     };
-    let pos = read();
-    let written = pos;
-    let last = 0;
-    let frame = 0;
+    let anims = [];
+    let length = 0;
     let hover = false;
+    let touching = false;
     let onScreen = true;
-    let waitUntil = 0;
-    const wait = (ms) => { waitUntil = performance.now() + ms; };
+    let timer;
 
-    const tick = (now) => {
-      frame = 0;
-      const dt = Math.min(now - last, 64) / 1000;
-      last = now;
-      if (!hover && now > waitUntil && !dialog?.open && !strip.matches(':focus-within')) {
-        pos += SPEED * dt;
-        const length = lap();
-        if (length > 0 && pos >= length) pos -= length; // копия на месте оригинала — шва не видно
-        write(pos);
-        written = read();
-      }
-      if (onScreen) frame = requestAnimationFrame(tick);
+    const startAuto = () => {
+      clearTimeout(timer);
+      if (anims.length || hover || touching || !onScreen) return;
+      if (dialog?.open || strip.matches(':focus-within')) { later(3000); return; }
+      length = lap();
+      if (length <= 0) return;
+      const from = ((read() % length) + length) % length;
+      const axis = vertical.matches ? 'Y' : 'X';
+      write(0);
+      anims = [...strip.children].map((li) => li.animate(
+        [{ transform: `translate${axis}(0)` }, { transform: `translate${axis}(-${length}px)` }],
+        { duration: (length / SPEED) * 1000, iterations: Infinity },
+      ));
+      anims.forEach((anim) => { anim.currentTime = (from / SPEED) * 1000; });
     };
-    const start = () => {
-      if (frame || !onScreen) return;
-      last = performance.now();
-      frame = requestAnimationFrame(tick);
+    // анимацию снимаем, а ту же позицию задаём обычной прокруткой — сдвига не видно
+    const stopAuto = () => {
+      clearTimeout(timer);
+      if (!anims.length) return;
+      const offset = (((anims[0].currentTime || 0) / 1000) * SPEED) % length;
+      anims.forEach((anim) => anim.cancel());
+      anims = [];
+      write(offset);
     };
+    const later = (ms) => { clearTimeout(timer); timer = setTimeout(startAuto, ms); };
 
-    // прокрутка посетителя: запоминаем, где он остановился, и ждём, пока он посмотрит
-    strip.addEventListener('scroll', () => {
-      const v = read();
-      if (Math.abs(v - written) < 2) return; // это наша же автопрокрутка
-      pos = v;
-      written = v;
-      wait(3000);
-    }, { passive: true });
-    reel.addEventListener('mouseenter', () => { hover = true; });
-    reel.addEventListener('mouseleave', () => { hover = false; wait(1200); });
-    reel.addEventListener('touchstart', () => wait(4000), { passive: true });
-    vertical.addEventListener('change', () => { pos = read(); written = pos; });
+    reel.addEventListener('mouseenter', () => { hover = true; stopAuto(); });
+    reel.addEventListener('mouseleave', () => { hover = false; later(1200); });
+    reel.addEventListener('touchstart', () => { touching = true; stopAuto(); }, { passive: true });
+    const touchDone = () => { touching = false; later(3000); };
+    reel.addEventListener('touchend', touchDone);
+    reel.addEventListener('touchcancel', touchDone); // касание перешло в прокрутку страницы
+    reel.addEventListener('focusin', stopAuto);
+    reel.addEventListener('focusout', () => later(3000));
+    // прокрутка посетителя (колесо, инерция после свайпа): ждём, пока он досмотрит
+    strip.addEventListener('scroll', () => { if (!anims.length) later(3000); }, { passive: true });
+    vertical.addEventListener('change', () => { stopAuto(); write(0); later(500); });
     new IntersectionObserver(([e]) => {
       onScreen = e.isIntersecting;
-      if (onScreen) start();
+      if (onScreen) later(300);
+      else anims.forEach((anim) => anim.pause());
+      if (onScreen) anims.forEach((anim) => anim.play());
     }).observe(reel);
-    start();
   }
 
   /* ---------- карта: статичная картинка Яндекса (без рекламы), по клику — Яндекс Карты ---------- */
