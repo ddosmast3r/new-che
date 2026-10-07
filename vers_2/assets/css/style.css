@@ -159,6 +159,9 @@ a.addr:hover .addr__street { text-decoration: underline; text-decoration-thickne
 .b { min-width: 0; }
 @media (max-width: 860px) {
   .hero { display: block; }
+  /* на телефоне снимок от самого верха и до краёв экрана: без пустой полосы над ним */
+  .page { padding-top: 0; }
+  .hero__cover { margin: 0 calc(-1 * var(--gap)); border-radius: 0 0 var(--r-card) var(--r-card); }
   .hero__photos li { overflow: visible; }
   .hero__cover { height: auto; aspect-ratio: 5 / 4; }
   .hero__over { left: 18px; right: 18px; bottom: 16px; align-items: flex-end; gap: 12px; }
