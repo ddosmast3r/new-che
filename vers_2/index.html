@@ -88,6 +88,15 @@
           d="M12 4v11m-5-5 5 5 5-5M5 20h14"
         />
       </symbol>
+      <symbol id="i-menu" viewBox="0 0 24 24">
+        <path
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          d="M5 6h14M5 12h14M5 18h9"
+        />
+      </symbol>
       <symbol id="i-close" viewBox="0 0 24 24">
         <path
           fill="none"
@@ -119,16 +128,41 @@
 
     <main class="page" id="top">
       <!-- ============ ШАПКА: логотип, фото зала, адрес. Сразу под ней меню, связь и часы ниже ============ -->
-      <section class="card hero" aria-label="Чё? Шашлык">
-        <h1 class="hero__logo">
-          <span class="sr-only">Чё? Шашлык — ресторан кавказской кухни в Пятигорске</span>
-          <img
-            src="/assets/brand/logo-full-dark-small.webp"
-            alt=""
-            width="900"
-            height="399"
-          />
-        </h1>
+      <section class="hero" aria-label="Чё? Шашлык">
+        <div class="hero__cover">
+          <picture>
+            <source
+              media="(max-width: 860px)"
+              srcset="/assets/img/hero/hero-1-m480.webp 480w, /assets/img/hero/hero-1-m800.webp 800w"
+              sizes="100vw"
+              width="800"
+              height="640"
+            />
+            <img
+              class="hero__bg"
+              src="/assets/img/hero/hero-1-1280.webp"
+              srcset="/assets/img/hero/hero-1-800.webp 800w, /assets/img/hero/hero-1-1280.webp 1280w"
+              sizes="100vw"
+              width="1672"
+              height="941"
+              alt="Зал ресторана вечером: бар, плетёные светильники, гости за столами"
+              fetchpriority="high"
+            />
+          </picture>
+          <div class="hero__over">
+            <h1 class="hero__logo">
+              <span class="sr-only">Чё? Шашлык — ресторан кавказской кухни в Пятигорске</span>
+              <img
+                src="/assets/brand/logo-full-light-small.webp"
+                alt=""
+                width="900"
+                height="399"
+              />
+            </h1>
+            <a class="addr" href="#map"><span class="addr__city">Пятигорск</span> <span class="addr__street" data-address-short>пр. Кирова, 27А</span></a>
+          </div>
+        </div>
+        <div class="hero__reel">
         <ul class="hero__photos" aria-label="Интерьер ресторана">
           <li>
             <button
@@ -140,11 +174,10 @@
               <img decoding="async"
                 src="/assets/img/interior/okno-vecher-m.webp"
                 srcset="/assets/img/interior/okno-vecher-t.webp 216w, /assets/img/interior/okno-vecher-m.webp 432w, /assets/img/interior/okno-vecher-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Вечерний зал у окна с видом на Спасский собор"
-                fetchpriority="high"
               />
             </button>
           </li>
@@ -158,7 +191,7 @@
               <img decoding="async"
                 src="/assets/img/interior/stol-kompaniya-m.webp"
                 srcset="/assets/img/interior/stol-kompaniya-t.webp 216w, /assets/img/interior/stol-kompaniya-m.webp 432w, /assets/img/interior/stol-kompaniya-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Длинный стол для большой компании"
@@ -172,10 +205,10 @@
               data-full="/assets/img/interior/okno-sobor.jpg"
               aria-label="Открыть фото: Вид из окна на Спасский собор"
             >
-              <img loading="lazy" decoding="async" fetchpriority="low"
+              <img decoding="async"
                 src="/assets/img/interior/okno-sobor-m.webp"
                 srcset="/assets/img/interior/okno-sobor-t.webp 216w, /assets/img/interior/okno-sobor-m.webp 432w, /assets/img/interior/okno-sobor-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Вид из окна на Спасский собор"
@@ -189,10 +222,10 @@
               data-full="/assets/img/interior/divany.jpg"
               aria-label="Открыть фото: Зал с бархатными диванами"
             >
-              <img loading="lazy" decoding="async" fetchpriority="low"
+              <img loading="lazy" decoding="async"
                 src="/assets/img/interior/divany-m.webp"
                 srcset="/assets/img/interior/divany-t.webp 216w, /assets/img/interior/divany-m.webp 432w, /assets/img/interior/divany-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Зал с бархатными диванами"
@@ -206,10 +239,10 @@
               data-full="/assets/img/interior/dekor.jpg"
               aria-label="Открыть фото: Плетёные светильники и тарелки на стене"
             >
-              <img loading="lazy" decoding="async" fetchpriority="low"
+              <img loading="lazy" decoding="async"
                 src="/assets/img/interior/dekor-m.webp"
                 srcset="/assets/img/interior/dekor-t.webp 216w, /assets/img/interior/dekor-m.webp 432w, /assets/img/interior/dekor-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Плетёные светильники и тарелки на стене"
@@ -223,10 +256,10 @@
               data-full="/assets/img/interior/cvety.jpg"
               aria-label="Открыть фото: Цветочная арка с подсветкой"
             >
-              <img loading="lazy" decoding="async" fetchpriority="low"
+              <img loading="lazy" decoding="async"
                 src="/assets/img/interior/cvety-m.webp"
                 srcset="/assets/img/interior/cvety-t.webp 216w, /assets/img/interior/cvety-m.webp 432w, /assets/img/interior/cvety-s.webp 648w"
-                sizes="(max-width: 430px) 44vw, (max-width: 860px) 190px, (max-width: 1680px) 15vw, 245px"
+                sizes="(max-width: 860px) 24vw, 11vw"
                 width="648"
                 height="720"
                 alt="Цветочная арка с подсветкой"
@@ -234,29 +267,20 @@
             </button>
           </li>
         </ul>
-        <a class="addr" href="#map" data-address-short-full>Пятигорск, пр. Кирова, 27А</a>
+        </div>
       </section>
 
       <!-- ============ МЕНЮ ============ -->
       <section class="card menu" id="menu" aria-labelledby="menu-title">
         <header class="menu__head">
-          <div>
-            <h2 id="menu-title" class="title">Меню</h2>
-            <p class="meta">Осеннее меню 2026 · цены в рублях</p>
-          </div>
-          <a
-            class="b b--sm"
-            href="/assets/che-shashlik-menu.pdf"
-            download
-            data-goal="click_menu_page"
-          >
-            <svg><use href="#i-down" /></svg>Скачать меню · PDF 6 МБ
-          </a>
+          <h2 id="menu-title" class="title">Меню</h2>
+          <p class="meta">Осеннее меню 2026 · цены в рублях</p>
         </header>
 
         <div class="menu__layout">
           <nav class="menu__nav" id="menu-nav" aria-label="Разделы меню"><!-- menu-nav:start -->
-<a href="#menu-bread" class="is-on" aria-current="true" data-cat="bread"><span>01</span>Хлеб</a>
+<a href="#menu-chef" class="menu__chef is-on" aria-current="true" data-cat="chef">Выбор шефа</a>
+<a href="#menu-bread" class="" data-cat="bread"><span>01</span>Хлеб</a>
 <a href="#menu-cold" class="" data-cat="cold"><span>02</span>Холодные закуски</a>
 <a href="#menu-salads" class="" data-cat="salads"><span>03</span>Салаты</a>
 <a href="#menu-soups" class="" data-cat="soups"><span>04</span>Супы</a>
@@ -267,7 +291,65 @@
 <a href="#menu-mangal" class="" data-cat="mangal"><span>09</span>Мангал</a>
 <!-- menu-nav:end --></nav>
           <div class="menu__body" id="menu-body"><!-- menu-body:start -->
-<section class="cat is-active" id="menu-bread" data-category="bread" aria-labelledby="title-bread">
+<section class="cat is-active" id="menu-chef" data-category="chef" aria-labelledby="title-chef">
+  <div class="cat__head"><h3 class="cat__title" id="title-chef">Выбор шефа</h3><p class="cat__note">С чего начать, если вы у нас впервые</p></div>
+  <div class="grid"><article class="dish">
+  <button type="button" class="window window--zoom" data-photo="phali" aria-label="Открыть фото: Ассорти пхали"><img src="/assets/img/menu/phali-640.webp" srcset="/assets/img/menu/phali-320.webp 320w, /assets/img/menu/phali-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Ассорти пхали" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Ассорти пхали</h4>
+  <p class="dish__desc">Пхали из свёклы, моркови и фасоли с грецким орехом, гранатом, кинзой и ореховым маслом.</p>
+  <div class="dish__foot"><span class="w">170 г</span><span class="price">280 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="syry" aria-label="Открыть фото: Кавказские сыры с чурчхелой"><img src="/assets/img/menu/syry-640.webp" srcset="/assets/img/menu/syry-320.webp 320w, /assets/img/menu/syry-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Кавказские сыры с чурчхелой" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Кавказские сыры с чурчхелой</h4>
+  <p class="dish__desc">Брынза, сулугуни и копчёный сулугуни с грецким орехом, чурчхелой и абрикосовым джемом.</p>
+  <div class="dish__foot"><span class="w">300 г</span><span class="price">590 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="tbilisi" aria-label="Открыть фото: Салат Тбилиси с индейкой"><img src="/assets/img/menu/tbilisi-640.webp" srcset="/assets/img/menu/tbilisi-320.webp 320w, /assets/img/menu/tbilisi-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Салат Тбилиси с индейкой" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Салат Тбилиси с индейкой</h4>
+  <p class="dish__desc">Филе индейки, фасоль, болгарский перец, красный лук, зелень и орехово-чесночный соус.</p>
+  <div class="dish__foot"><span class="w">260 г</span><span class="price">570 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="molodoy-syr" aria-label="Открыть фото: Салат с молодым сыром"><img src="/assets/img/menu/molodoy-syr-640.webp" srcset="/assets/img/menu/molodoy-syr-320.webp 320w, /assets/img/menu/molodoy-syr-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Салат с молодым сыром" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Салат с молодым сыром</h4>
+  <p class="dish__desc">Печёный перец и сыр чечил с миксом салата, свежих трав и грецким орехом.</p>
+  <div class="dish__foot"><span class="w">230 г</span><span class="price">430 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="adzharski" aria-label="Открыть фото: Хачапури по-аджарски"><img src="/assets/img/menu/adzharski-640.webp" srcset="/assets/img/menu/adzharski-320.webp 320w, /assets/img/menu/adzharski-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Хачапури по-аджарски" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Хачапури по-аджарски</h4>
+  <p class="dish__desc">Дрожжевое тесто с миксом сыров, яйцом, мацони и сливочным маслом.</p>
+  <div class="dish__foot"><span class="w">330 г</span><span class="price">470 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="yagnenok-bulgur" aria-label="Открыть фото: Томлёный ягнёнок с булгуром"><img src="/assets/img/menu/yagnenok-bulgur-640.webp" srcset="/assets/img/menu/yagnenok-bulgur-320.webp 320w, /assets/img/menu/yagnenok-bulgur-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Томлёный ягнёнок с булгуром" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Томлёный ягнёнок с булгуром</h4>
+  <p class="dish__desc">Ягнёнок с булгуром и аджапсандалом, аджикой, чесночным маслом, наршарабом и зеленью.</p>
+  <div class="dish__foot"><span class="w">350 г</span><span class="price">890 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="odzhahuri" aria-label="Открыть фото: Оджахури со свининой"><img src="/assets/img/menu/odzhahuri-640.webp" srcset="/assets/img/menu/odzhahuri-320.webp 320w, /assets/img/menu/odzhahuri-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Оджахури со свининой" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Оджахури со свининой</h4>
+  <p class="dish__desc">Свинина и картофель с томатами, чесночным и сливочным маслом, луком и зеленью.</p>
+  <div class="dish__foot"><span class="w">400 г</span><span class="price">620 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="pechen" aria-label="Открыть фото: Печень в сетке"><img src="/assets/img/menu/pechen-640.webp" srcset="/assets/img/menu/pechen-320.webp 320w, /assets/img/menu/pechen-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Печень в сетке" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Печень в сетке</h4>
+  <p class="dish__desc">Говяжья печень в жировой сетке, сочная внутри, с тонкой румяной корочкой.</p>
+  <div class="dish__foot"><span class="w">100/60 г</span><span class="price">330 <small>руб.</small></span></div>
+</article>
+<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="lyulya-kavkaz" aria-label="Открыть фото: Люля-кебаб по-кавказски"><img src="/assets/img/menu/lyulya-kavkaz-640.webp" srcset="/assets/img/menu/lyulya-kavkaz-320.webp 320w, /assets/img/menu/lyulya-kavkaz-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Люля-кебаб по-кавказски" width="667" height="667" loading="lazy" decoding="async"></button>
+  <h4 class="dish__name">Люля-кебаб по-кавказски</h4>
+  <p class="dish__desc">Свиная шея и говядина с луком, кориандром, сванской солью и чили, в жировой сетке.</p>
+  <div class="dish__foot"><span class="w">100/60 г</span><span class="price">330 <small>руб.</small></span></div>
+</article></div>
+  <div class="cat__cta"><span>Заказать домой</span><a href="tel:+79624990044" class="b b--fill b--sm" data-phone-link><svg><use href="#i-phone" /></svg>Позвонить</a><a class="b b--sm" href="/#order" data-open-contacts><svg><use href="#i-chat" /></svg>Написать</a></div>
+</section>
+<section class="cat" id="menu-bread" data-category="bread" aria-labelledby="title-bread">
   <div class="cat__head"><h3 class="cat__title" id="title-bread">Хлеб</h3></div>
   <div class="cat__split"><div class="grid"><article class="dish">
   <button type="button" class="window window--zoom" data-photo="lepeshka" aria-label="Открыть фото: Лепёшка кавказская с сыром и намазками"><img src="/assets/img/menu/lepeshka-640.webp" srcset="/assets/img/menu/lepeshka-320.webp 320w, /assets/img/menu/lepeshka-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="Лепёшка кавказская с сыром и намазками" width="667" height="667" loading="lazy" decoding="async"></button>
@@ -612,59 +694,30 @@
 </section>
 <!-- menu-body:end --></div>
         </div>
-        <p class="menu__foot">
-          Если у вас аллергия на какой-то продукт, скажите об этом при заказе,
-          повар учтёт. <br />
-          Цены иногда меняются, точную сумму назовёт администратор. <br />На
-          фото блюда сняты для меню, в жизни подача может немного отличаться.
-        </p>
-      </section>
-
-      <!-- ============ ДОСТАВКА И БРОНЬ ============ -->
-      <section class="card order" id="order" aria-labelledby="order-title">
-        <h2 id="order-title" class="sr-only">Доставка и бронь</h2>
-        <article class="order__col">
-          <p class="meta">
-            <span class="ornament" aria-hidden="true"></span>01 · Доставка и
-            самовывоз
-          </p>
-          <h3 class="title title--md">Заказать <em>домой</em></h3>
-          <p class="order__text">
-            Привезём шашлык, хачапури и всё, что есть в меню. Доставляем только
-            по Пятигорску. Можно и забрать самим с Кирова, 27А. Сколько стоит
-            доставка и когда приедет курьер, скажет администратор.
-          </p>
-        </article>
-        <article class="order__col">
-          <p class="meta">
-            <span class="ornament" aria-hidden="true"></span>02 · Бронь стола
-          </p>
-          <h3 class="title title--md">Забронировать <em>стол</em></h3>
-          <p class="order__text">
-            Посадим у окна, поближе к сцене или за большой стол, если вас много.
-            <br />
-            Банкет или день рождения лучше обсудить по телефону.
-          </p>
-        </article>
-        <div class="order__btns">
-          <a href="tel:+79624990044" class="order__ask" data-phone-link
-            ><span data-phone-text>+7 962 499-00-44</span
-          ></a>
-          <div class="btns">
-            <a href="tel:+79624990044" class="b b--fill" data-phone-link
-              ><svg><use href="#i-phone" /></svg>Позвонить</a
-            >
-            <a href="https://wa.me/79624990044?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!" class="b" data-wa="hello" target="_blank" rel="noopener"
-              ><svg><use href="#i-wa" /></svg>WhatsApp</a
-            >
-            <a href="https://t.me/che_shashlik" class="b" data-tg target="_blank" rel="noopener"
-              ><svg><use href="#i-tg" /></svg>Telegram</a
-            >
-            <a href="https://max.ru/u/f9LHodD0cOJk5PfOJ17g-RiKk7h7qEadSUoC2X9kvgjHrePDrhTh9YJaDyo" class="b" data-max target="_blank" rel="noopener"
-              ><svg><use href="#i-max" /></svg>MAX</a
-            >
-          </div>
+        <div class="menu__download">
+          <a
+            class="b"
+            href="/assets/che-shashlik-menu.pdf"
+            download
+            data-goal="click_menu_page"
+          >
+            <svg><use href="#i-down" /></svg>Скачать меню · PDF 6 МБ
+          </a>
         </div>
+        <ul class="menu__notes">
+          <li>
+            <span class="ornament" aria-hidden="true"></span>Если у вас аллергия
+            на какой-то продукт, скажите об этом при заказе, повар учтёт.
+          </li>
+          <li>
+            <span class="ornament" aria-hidden="true"></span>Цены иногда
+            меняются, точную сумму назовёт администратор.
+          </li>
+          <li>
+            <span class="ornament" aria-hidden="true"></span>На фото блюда сняты
+            для меню, в жизни подача может немного отличаться.
+          </li>
+        </ul>
       </section>
 
       <!-- ============ ИНТЕРЬЕР ============ -->
@@ -951,7 +1004,14 @@
             Сочный мангал, хинкали и кавказская кухня в уютном ресторане для
             семьи и компаний.
           </p>
-          <p class="about__motto">Премиум по вкусу, честный по цене.</p>
+          <div class="about__reviews">
+            <p class="meta">Отзывы гостей</p>
+            <div class="btns">
+              <a href="https://yandex.ru/maps/org/chyo_shashlyk_/30239245640/reviews/" class="b b--sm" data-yandex-reviews target="_blank" rel="noopener">Яндекс Карты ↗</a>
+              <a href="https://2gis.ru/pyatigorsk/firm/70000001109313094/tab/reviews" class="b b--sm" data-2gis-reviews target="_blank" rel="noopener">2ГИС ↗</a>
+            </div>
+          </div>
+          <p class="about__motto">Тепло и вкус южного дома.</p>
         </div>
         <ol class="about__list">
           <li>
@@ -972,10 +1032,11 @@
           </li>
           <li>
             <span class="about__num">03</span>
-            <h3>Для ужинов и встреч</h3>
+            <h3>Ваши события</h3>
             <p>
-              Уютный зал для семейного ужина, встречи с друзьями или большой
-              компании.
+              Дни рождения, семейные ужины, корпоративные встречи. Меню на огне,
+              щедрые подачи и команда, которая берёт организацию на себя. Вам
+              остаётся главное: быть с гостями.
             </p>
           </li>
           <li>
@@ -986,6 +1047,53 @@
             </p>
           </li>
         </ol>
+      </section>
+
+      <!-- ============ ДОСТАВКА И БРОНЬ ============ -->
+      <section class="card order" id="order" aria-labelledby="order-title">
+        <h2 id="order-title" class="sr-only">Доставка и бронь</h2>
+        <article class="order__col">
+          <p class="meta">
+            <span class="ornament" aria-hidden="true"></span>01 · Доставка и
+            самовывоз
+          </p>
+          <h3 class="title title--md">Заказать <em>домой</em></h3>
+          <p class="order__text">
+            Привезём шашлык, хачапури и всё, что есть в меню. Доставляем только
+            по Пятигорску. Можно и забрать самим с Кирова, 27А. Сколько стоит
+            доставка и когда приедет курьер, скажет администратор.
+          </p>
+        </article>
+        <article class="order__col">
+          <p class="meta">
+            <span class="ornament" aria-hidden="true"></span>02 · Бронь стола
+          </p>
+          <h3 class="title title--md">Забронировать <em>стол</em></h3>
+          <p class="order__text">
+            Посадим у окна, поближе к сцене или за большой стол, если вас много.
+            <br />
+            Банкет или день рождения лучше обсудить по телефону.
+          </p>
+        </article>
+        <div class="order__btns">
+          <a href="tel:+79624990044" class="order__ask" data-phone-link
+            ><span data-phone-text>+7 962 499-00-44</span
+          ></a>
+          <div class="btns">
+            <a href="tel:+79624990044" class="b b--fill" data-phone-link
+              ><svg><use href="#i-phone" /></svg>Позвонить</a
+            >
+            <a href="https://wa.me/79624990044?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!" class="b" data-wa="hello" target="_blank" rel="noopener"
+              ><svg><use href="#i-wa" /></svg>WhatsApp</a
+            >
+            <a href="https://t.me/che_shashlik" class="b" data-tg target="_blank" rel="noopener"
+              ><svg><use href="#i-tg" /></svg>Telegram</a
+            >
+            <a href="https://max.ru/u/f9LHodD0cOJk5PfOJ17g-RiKk7h7qEadSUoC2X9kvgjHrePDrhTh9YJaDyo" class="b" data-max target="_blank" rel="noopener"
+              ><svg><use href="#i-max" /></svg>MAX</a
+            >
+          </div>
+        </div>
       </section>
 
       <!-- ============ КАРТА ============ -->
@@ -1010,8 +1118,9 @@
             </div>
           </dl>
           <p class="where__text">
-            Мы в центре, на проспекте Кирова, рядом со Спасским собором. Кнопка
-            «Маршрут» откроет Яндекс Карты с дорогой до нас.
+            Мы в центре, на проспекте Кирова, рядом со Спасским собором.
+            У ресторана удобная парковка. Кнопка «Маршрут» откроет Яндекс Карты
+            с дорогой до нас.
           </p>
           <div class="btns">
             <a href="https://yandex.ru/maps/?rtext=~44.036037,43.078323&amp;rtt=auto" class="b b--fill" data-route target="_blank" rel="noopener"
@@ -1094,6 +1203,7 @@
 
     <!-- нижняя панель на телефоне -->
     <nav class="dock" aria-label="Быстрая связь">
+      <a href="#menu" class="dock__menu"><svg><use href="#i-menu" /></svg>Меню</a>
       <a href="tel:+79624990044" class="dock__call" data-phone-link
         ><svg><use href="#i-phone" /></svg>Позвонить</a
       >

@@ -22,8 +22,8 @@ try {
   assert.equal(requests, 0, 'Analytics loaded after rejection');
 
   const ids = await page.locator('[data-cat]').evaluateAll((nodes) => nodes.map((node) => node.dataset.cat));
-  assert.equal(ids.length, 9);
-  assert.equal(await page.locator('[data-category]').count(), 9);
+  assert.equal(ids.length, 10);
+  assert.equal(await page.locator('[data-category]').count(), 10);
   for (const width of [320, 375, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const id of ids) {
@@ -87,7 +87,7 @@ try {
   const noJS = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 390, height: 844 } });
   const plain = await noJS.newPage();
   await plain.goto(origin);
-  assert.equal(await plain.locator('[data-category]:visible').count(), 9);
+  assert.equal(await plain.locator('[data-category]:visible').count(), 10);
   assert.equal(await plain.locator('[data-phone-link][href="tel:+79624990044"]').count() > 0, true);
   assert.equal((await plain.locator('[data-address]').first().textContent()).includes('Кирова'), true);
   assert.equal(await plain.locator('a[href="#"]').count(), 0);
@@ -96,10 +96,10 @@ try {
   await plain.screenshot({ path: '/tmp/che-no-js.png' });
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(origin);
-  await page.locator('[data-category="bread"] img').evaluate((img) => img.decode());
+  await page.locator('[data-category="chef"] img').first().evaluate((img) => { img.loading = 'eager'; return img.decode(); });
   await page.screenshot({ path: '/tmp/che-mobile.png', animations: 'disabled' });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.locator('[data-category="bread"] img').evaluate((img) => img.decode());
+  await page.locator('[data-category="chef"] img').first().evaluate((img) => { img.loading = 'eager'; return img.decode(); });
   await page.screenshot({ path: '/tmp/che-desktop.png', animations: 'disabled' });
   assert.deepEqual(errors, [], 'Browser runtime errors');
   console.log('No-JavaScript content, category links, gallery, browser errors: OK');

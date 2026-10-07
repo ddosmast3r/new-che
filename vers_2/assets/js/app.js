@@ -24,7 +24,7 @@
   applyContacts();
 
   fill('[data-address]', (el) => { el.textContent = SITE.address; });
-  fill('[data-address-short-full]', (el) => { el.textContent = 'Пятигорск, ' + SITE.addressShort; });
+  fill('[data-address-short]', (el) => { el.textContent = SITE.addressShort; });
   fill('[data-instagram]', (el) => { el.href = 'https://instagram.com/' + SITE.instagram; el.textContent = 'Instagram @' + SITE.instagram; });
   fill('[data-yandex]', (el) => { el.href = SITE.yandexOrg; });
   fill('[data-2gis]', (el) => { el.href = SITE.twoGis; });
@@ -59,6 +59,83 @@
     pill.classList.toggle('is-shown', past);
     dock.classList.toggle('is-shown', past);
   }).observe(hero);
+
+  /* ---------- лента фото интерьера в шапке: сама медленно листается по кругу ---------- */
+  // Клиенту нравится движение. Лента — обычная прокручиваемая полоса: колесо мыши, тачпад
+  // и палец работают как везде. Пока курсор над лентой, её листают или фото выбрано
+  // с клавиатуры, автопрокрутка ждёт. Копии фото нужны для бесконечного круга, они скрыты
+  // от экранного диктора и клавиатуры, но открываются по нажатию.
+  const reel = $('.hero__reel');
+  const strip = reel && $('.hero__photos', reel);
+  if (strip && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const originals = [...strip.children];
+    originals.forEach((li) => {
+      const copy = li.cloneNode(true);
+      copy.setAttribute('aria-hidden', 'true');
+      $$('button', copy).forEach((b) => { b.tabIndex = -1; });
+      strip.append(copy);
+    });
+    reel.classList.add('is-moving');
+    // после загрузки страницы догружаем остальные фото ленты, чтобы они не въезжали пустыми
+    window.addEventListener('load', () => $$('img', strip).forEach((img) => { img.loading = 'eager'; }), { once: true });
+
+    const SPEED = 20; // пикселей в секунду
+    const vertical = window.matchMedia('(min-width: 861px)'); // на компьютере лента вертикальная
+    const dialog = $('#photo');
+    const read = () => (vertical.matches ? strip.scrollTop : strip.scrollLeft);
+    const write = (v) => { if (vertical.matches) strip.scrollTop = v; else strip.scrollLeft = v; };
+    // длина одного круга: от первого фото до его копии
+    const lap = () => {
+      const a = originals[0];
+      const b = strip.children[originals.length];
+      return vertical.matches ? b.offsetTop - a.offsetTop : b.offsetLeft - a.offsetLeft;
+    };
+    let pos = read();
+    let written = pos;
+    let last = 0;
+    let frame = 0;
+    let hover = false;
+    let onScreen = true;
+    let waitUntil = 0;
+    const wait = (ms) => { waitUntil = performance.now() + ms; };
+
+    const tick = (now) => {
+      frame = 0;
+      const dt = Math.min(now - last, 64) / 1000;
+      last = now;
+      if (!hover && now > waitUntil && !dialog?.open && !strip.matches(':focus-within')) {
+        pos += SPEED * dt;
+        const length = lap();
+        if (length > 0 && pos >= length) pos -= length; // копия на месте оригинала — шва не видно
+        write(pos);
+        written = read();
+      }
+      if (onScreen) frame = requestAnimationFrame(tick);
+    };
+    const start = () => {
+      if (frame || !onScreen) return;
+      last = performance.now();
+      frame = requestAnimationFrame(tick);
+    };
+
+    // прокрутка посетителя: запоминаем, где он остановился, и ждём, пока он посмотрит
+    strip.addEventListener('scroll', () => {
+      const v = read();
+      if (Math.abs(v - written) < 2) return; // это наша же автопрокрутка
+      pos = v;
+      written = v;
+      wait(3000);
+    }, { passive: true });
+    reel.addEventListener('mouseenter', () => { hover = true; });
+    reel.addEventListener('mouseleave', () => { hover = false; wait(1200); });
+    reel.addEventListener('touchstart', () => wait(4000), { passive: true });
+    vertical.addEventListener('change', () => { pos = read(); written = pos; });
+    new IntersectionObserver(([e]) => {
+      onScreen = e.isIntersecting;
+      if (onScreen) start();
+    }).observe(reel);
+    start();
+  }
 
   /* ---------- карта: статичная картинка Яндекса (без рекламы), по клику — Яндекс Карты ---------- */
   const mapUrl = (scale) => `https://static-maps.yandex.ru/1.x/?ll=${SITE.lng},${SITE.lat}&z=16&size=650,450&scale=${scale}&l=map&pt=${SITE.lng},${SITE.lat},pm2rdl&lang=ru_RU`;
@@ -139,7 +216,8 @@
     ? '<span class="price--ask">цену уточняйте</span>'
     : `<span class="price">${esc(fmt(p))} <small>руб.</small></span>`;
 
-  const state = { cat: MENU.kitchen[0].id };
+  const CATS = [MENU.chef, ...MENU.kitchen];
+  const state = { cat: CATS[0].id };
   const nav = $('#menu-nav');
   const body = $('#menu-body');
   const menuCard = $('#menu');
@@ -147,7 +225,7 @@
   // All categories are present in the initial HTML. JavaScript only switches visibility.
   const TONE = { cold: 'beige', salads: 'olive', soups: 'beige', sides: 'beige', sauces: 'beige' };
   function renderCat() {
-    const cat = MENU.kitchen.find((category) => category.id === state.cat);
+    const cat = CATS.find((category) => category.id === state.cat);
     menuCard.dataset.tone = TONE[cat.id] || 'light';
     $$('[data-category]', body).forEach((section) => {
       section.classList.toggle('is-active', section.dataset.category === state.cat);
@@ -155,7 +233,7 @@
   }
 
   function setCat(id, scroll = true) {
-    if (!MENU.kitchen.some((cat) => cat.id === id)) return;
+    if (!CATS.some((cat) => cat.id === id)) return;
     state.cat = id;
     $$('[data-cat]', nav).forEach((button) => {
       const selected = button.dataset.cat === id;
@@ -196,7 +274,7 @@
   body.addEventListener('click', (e) => {
     const b = e.target.closest('[data-photo]');
     if (!b) return;
-    const it = MENU.kitchen.find((c) => c.id === state.cat).items.find((i) => i.img === b.dataset.photo);
+    const it = CATS.find((c) => c.id === state.cat).items.find((i) => i.img === b.dataset.photo);
     showPhoto(IMG + it.img + '.jpg', it.name,
       `<span class="photo__name">${esc(it.name)}</span><span class="w">${esc(it.w || '')}</span>${priceHtml(it.price)}`, false);
   });
@@ -212,7 +290,7 @@
 
   const syncHash = () => {
     const id = location.hash.replace('#menu-', '');
-    setCat(MENU.kitchen.some((cat) => cat.id === id) ? id : MENU.kitchen[0].id, false);
+    setCat(CATS.some((cat) => cat.id === id) ? id : CATS[0].id, false);
   };
   window.addEventListener('hashchange', syncHash);
   syncHash();

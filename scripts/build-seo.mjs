@@ -15,17 +15,19 @@ const money = (value) => value == null
   ? '<span class="price--ask">цену уточняйте</span>'
   : `<span class="price">${esc(String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' '))} <small>руб.</small></span>`;
 const row = (item) => `<div class="row"><span class="row__name">${esc(item.name)}</span><span class="w">${esc(item.w || '')}</span>${money(item.price)}${item.desc ? `<span class="row__desc">${esc(item.desc)}</span>` : ''}</div>`;
-const card = (item) => `<article class="dish">
-  <button type="button" class="window window--zoom" data-photo="${esc(item.img)}" aria-label="Открыть фото: ${esc(item.name)}"><img src="${imagePath}${esc(item.img)}-640.webp" srcset="${imagePath}${esc(item.img)}-320.webp 320w, ${imagePath}${esc(item.img)}-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="${esc(item.name)}" width="667" height="667" loading="lazy" decoding="async">${item.chef ? '<span class="seal">Шеф советует</span>' : ''}</button>
+const card = (item, seal = true) => `<article class="dish">
+  <button type="button" class="window window--zoom" data-photo="${esc(item.img)}" aria-label="Открыть фото: ${esc(item.name)}"><img src="${imagePath}${esc(item.img)}-640.webp" srcset="${imagePath}${esc(item.img)}-320.webp 320w, ${imagePath}${esc(item.img)}-640.webp 640w" sizes="(max-width: 560px) 116px, (max-width: 860px) calc(100vw - 80px), 400px" alt="${esc(item.name)}" width="667" height="667" loading="lazy" decoding="async">${seal && item.chef ? '<span class="seal">Шеф советует</span>' : ''}</button>
   <h4 class="dish__name">${esc(item.name)}</h4>
   ${item.desc ? `<p class="dish__desc">${esc(item.desc)}</p>` : ''}
   <div class="dish__foot"><span class="w">${esc(item.w || '')}</span>${money(item.price)}</div>
 </article>`;
 
-const sections = menu.kitchen.map((category, index) => {
+// «Выбор шефа» открыт первым; плашка внутри него не нужна.
+const categories = [menu.chef, ...menu.kitchen];
+const sections = categories.map((category, index) => {
   const cards = category.items.filter((item) => item.img);
   const rows = category.items.filter((item) => !item.img);
-  const grid = `<div class="grid">${cards.map(card).join('\n')}</div>`;
+  const grid = `<div class="grid">${cards.map((item) => card(item, category !== menu.chef)).join('\n')}</div>`;
   const list = `<div class="list list--extra">${rows.map(row).join('\n')}</div>`;
   const contents = category.list ? `<div class="list">${category.items.map(row).join('\n')}</div>`
     : !rows.length ? grid : cards.length <= 2 ? `<div class="cat__split">${grid}${list}</div>` : grid + list;
@@ -35,7 +37,10 @@ const sections = menu.kitchen.map((category, index) => {
   <div class="cat__cta"><span>Заказать домой</span><a class="b b--fill b--sm" data-phone-link href="tel:${site.phoneRaw}"><svg><use href="#i-phone" /></svg>Позвонить</a><a class="b b--sm" href="/#order" data-open-contacts><svg><use href="#i-chat" /></svg>Написать</a></div>
 </section>`;
 }).join('\n');
-const navigation = menu.kitchen.map((category, index) => `<a href="#menu-${category.id}" class="${index === 0 ? 'is-on' : ''}"${index === 0 ? ' aria-current="true"' : ''} data-cat="${category.id}"><span>${String(index + 1).padStart(2, '0')}</span>${esc(category.title)}</a>`).join('\n');
+const navigation = [
+  `<a href="#menu-${menu.chef.id}" class="menu__chef is-on" aria-current="true" data-cat="${menu.chef.id}">${esc(menu.chef.title)}</a>`,
+  ...menu.kitchen.map((category, index) => `<a href="#menu-${category.id}" class="" data-cat="${category.id}"><span>${String(index + 1).padStart(2, '0')}</span>${esc(category.title)}</a>`),
+].join('\n');
 
 let html = readFileSync(`${root}index.html`, 'utf8');
 function block(name, content) {
@@ -53,7 +58,7 @@ block('verification', site.yandexVerification ? `<meta name="yandex-verification
 // Update fallback text and links, preserving the surrounding hand-edited layout.
 const texts = {
   'data-phone-text': site.phone, 'data-address': site.address,
-  'data-address-short-full': `Пятигорск, ${site.addressShort}`,
+  'data-address-short': site.addressShort,
   'data-legal': site.legal, 'data-instagram': `Instagram @${site.instagram}`,
 };
 for (const [attribute, value] of Object.entries(texts)) {
