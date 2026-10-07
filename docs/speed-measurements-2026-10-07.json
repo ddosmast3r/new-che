@@ -1,0 +1,322 @@
+{
+  "date": "2026-10-07",
+  "lighthouseVersion": "13.5.0",
+  "throttlingMethod": "simulate",
+  "note": "Sequential runs, median shown. Laboratory values, not field Core Web Vitals.",
+  "series": [
+    {
+      "label": "vers2-base",
+      "description": "Before changes: vers_2 as is, local nginx 1.24, HTTP/1.1, separate CSS files",
+      "url": "http://127.0.0.1:8766/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        91,
+        92,
+        91
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1809,
+        "lcpMs": 3315,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        3316,
+        3234,
+        3315
+      ]
+    },
+    {
+      "label": "stage-base",
+      "description": "Before changes + bridge build (CSS inlined), HTTP/1.1",
+      "url": "http://127.0.0.1:8767/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        93,
+        92,
+        92
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1656,
+        "lcpMs": 3230,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        3098,
+        3235,
+        3230
+      ]
+    },
+    {
+      "label": "stepA",
+      "description": "Step A: menu photos lazy, no fetchpriority=high on first dish; HTTP/1.1",
+      "url": "http://127.0.0.1:8767/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        94,
+        92,
+        94
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1657,
+        "lcpMs": 3017,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        3017,
+        3234,
+        3012
+      ]
+    },
+    {
+      "label": "expNoTypo",
+      "description": "Experiment (not applied): without typo.js; HTTP/1.1",
+      "url": "http://127.0.0.1:8767/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        93,
+        92,
+        93
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1658,
+        "lcpMs": 3091,
+        "tbtMs": 0,
+        "cls": 0.0001
+      },
+      "lcpRunsMs": [
+        3091,
+        3236,
+        3084
+      ]
+    },
+    {
+      "label": "h2-base",
+      "description": "Before changes, local nginx HTTP/2 + TLS (as production)",
+      "url": "https://127.0.0.1:8768/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        97,
+        96,
+        96
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1652,
+        "lcpMs": 2627,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        2559,
+        2628,
+        2627
+      ]
+    },
+    {
+      "label": "h2-stepA",
+      "description": "Step A, inlined CSS, HTTP/2 + TLS",
+      "url": "https://127.0.0.1:8768/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        96,
+        96,
+        98
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1691,
+        "lcpMs": 2591,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        2592,
+        2591,
+        2430
+      ]
+    },
+    {
+      "label": "h2-stepB",
+      "description": "Step B: header logo without fetchpriority=high, floating-nav logo fetchpriority=low; HTTP/2 + TLS",
+      "url": "https://127.0.0.1:8768/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        97,
+        97,
+        96
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1506,
+        "lcpMs": 2505,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        2481,
+        2505,
+        2552
+      ]
+    },
+    {
+      "label": "h2-expNoPreload",
+      "description": "Experiment (not applied): without Golos preload; HTTP/2 + TLS",
+      "url": "https://127.0.0.1:8768/",
+      "formFactor": "mobile",
+      "runs": 3,
+      "performance": [
+        97,
+        97,
+        96
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1803,
+        "lcpMs": 2403,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        2403,
+        2403,
+        2477
+      ]
+    },
+    {
+      "label": "h2-stepB-desktop",
+      "description": "Step B, desktop preset, HTTP/2 + TLS",
+      "url": "https://127.0.0.1:8768/",
+      "formFactor": "desktop",
+      "runs": 3,
+      "performance": [
+        100,
+        100,
+        100
+      ],
+      "seo": [
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 364,
+        "lcpMs": 544,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        573,
+        462,
+        544
+      ]
+    },
+    {
+      "label": "prod-mobile",
+      "description": "Published https://cheshashlik.ru/, mobile",
+      "url": "https://cheshashlik.ru/",
+      "formFactor": "mobile",
+      "runs": 5,
+      "performance": [
+        100,
+        99,
+        99,
+        95,
+        95
+      ],
+      "seo": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "median": {
+        "fcpMs": 1184,
+        "lcpMs": 2078,
+        "tbtMs": 0,
+        "cls": 0.0001
+      },
+      "lcpRunsMs": [
+        1718,
+        2078,
+        1933,
+        2697,
+        2690
+      ]
+    },
+    {
+      "label": "prod-desktop",
+      "description": "Published https://cheshashlik.ru/, desktop",
+      "url": "https://cheshashlik.ru/",
+      "formFactor": "desktop",
+      "runs": 3,
+      "performance": [
+        100,
+        100,
+        100
+      ],
+      "seo": [
+        100,
+        100,
+        92
+      ],
+      "median": {
+        "fcpMs": 415,
+        "lcpMs": 715,
+        "tbtMs": 0,
+        "cls": 0
+      },
+      "lcpRunsMs": [
+        715,
+        739,
+        678
+      ]
+    }
+  ]
+}

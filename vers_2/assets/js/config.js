@@ -1,6 +1,10 @@
 /* ===== НАСТРОЙКИ САЙТА =====
    Данные взяты с cheshashlik.ru. Подставляются во все места страницы. */
 window.SITE = {
+  url: 'https://cheshashlik.ru',
+  // Публичный код из Яндекс Вебмастера → Права доступа → Метатег.
+  // После заполнения выполнить: node scripts/build-seo.mjs
+  yandexVerification: '',
   phone: '+7 962 499-00-44',
   phoneRaw: '+79624990044',
 

@@ -1,0 +1,150 @@
+{
+  "date": "2026-10-07",
+  "note": "Lab measurements, not field Core Web Vitals. Local and public hosting differ; existing design edits are included in local build.",
+  "runs": [
+    {
+      "label": "public-mobile",
+      "url": "https://cheshashlik.ru/",
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T07:59:47.615Z",
+      "formFactor": "mobile",
+      "throttlingMethod": "simulate",
+      "scores": {
+        "performance": 80,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 1048.3960000000002,
+          "unit": "millisecond"
+        },
+        "largest-contentful-paint": {
+          "value": 5474.396000000001,
+          "unit": "millisecond"
+        },
+        "total-blocking-time": {
+          "value": 2,
+          "unit": "millisecond"
+        },
+        "cumulative-layout-shift": {
+          "value": 0.04930759079420569,
+          "unit": "unitless"
+        },
+        "speed-index": {
+          "value": 1358.783097999656,
+          "unit": "millisecond"
+        }
+      }
+    },
+    {
+      "label": "local-mobile",
+      "url": "http://127.0.0.1:8766/",
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T08:06:18.158Z",
+      "formFactor": "mobile",
+      "throttlingMethod": "simulate",
+      "scores": {
+        "performance": 92,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 1209.71295,
+          "unit": "millisecond"
+        },
+        "largest-contentful-paint": {
+          "value": 3314.569425,
+          "unit": "millisecond"
+        },
+        "total-blocking-time": {
+          "value": 0,
+          "unit": "millisecond"
+        },
+        "cumulative-layout-shift": {
+          "value": 0.0003757458560421663,
+          "unit": "unitless"
+        },
+        "speed-index": {
+          "value": 1209.71295,
+          "unit": "millisecond"
+        }
+      }
+    },
+    {
+      "label": "local-desktop",
+      "url": "http://127.0.0.1:8766/",
+      "lighthouseVersion": "13.5.0",
+      "fetchTime": "2026-10-07T08:06:53.928Z",
+      "formFactor": "desktop",
+      "throttlingMethod": "simulate",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "metrics": {
+        "first-contentful-paint": {
+          "value": 490.17359999999996,
+          "unit": "millisecond"
+        },
+        "largest-contentful-paint": {
+          "value": 913.5648000000001,
+          "unit": "millisecond"
+        },
+        "total-blocking-time": {
+          "value": 0,
+          "unit": "millisecond"
+        },
+        "cumulative-layout-shift": {
+          "value": 0,
+          "unit": "unitless"
+        },
+        "speed-index": {
+          "value": 490.17359999999996,
+          "unit": "millisecond"
+        }
+      }
+    }
+  ],
+  "externalLinks": [
+    {
+      "url": "https://t.me/che_shashlik",
+      "status": 200,
+      "final": "https://t.me/che_shashlik"
+    },
+    {
+      "url": "https://wa.me/79624990044",
+      "status": 200,
+      "final": "https://api.whatsapp.com/send/?phone=79624990044&text&type=phone_number&app_absent=0"
+    },
+    {
+      "url": "https://max.ru/u/f9LHodD0cOJk5PfOJ17g-RiKk7h7qEadSUoC2X9kvgjHrePDrhTh9YJaDyo",
+      "status": 403
+    },
+    {
+      "url": "https://yandex.ru/maps/org/chyo_shashlyk_/30239245640/",
+      "status": 200,
+      "final": "https://yandex.ru/maps/org/chyo_shashlyk_/30239245640/"
+    },
+    {
+      "url": "https://2gis.ru/pyatigorsk/firm/70000001109313094",
+      "status": 200,
+      "final": "https://2gis.ru/pyatigorsk/firm/70000001109313094"
+    },
+    {
+      "url": "https://instagram.com/che_shashlik.26",
+      "status": 200,
+      "final": "https://www.instagram.com/che_shashlik.26"
+    },
+    {
+      "url": "https://yandex.ru/legal/confidential/",
+      "status": 200,
+      "final": "https://yandex.ru/legal/confidential/ru/"
+    }
+  ]
+}

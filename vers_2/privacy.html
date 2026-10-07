@@ -7,7 +7,7 @@
   <meta name="description" content="Политика обработки персональных данных и использования cookie на сайте ресторана «Чё? Шашлык», Пятигорск.">
   <link rel="canonical" href="https://cheshashlik.ru/privacy.html">
   <meta name="theme-color" content="#1d1a1f">
-  <link rel="icon" href="/assets/brand/favicon.png">
+  <link rel="icon" href="/assets/brand/favicon.png?v=white-20261007" type="image/png" sizes="128x128">
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
@@ -69,10 +69,46 @@
   </article>
 
   <footer class="foot">
-    <a href="/"><img class="foot__logo" src="/assets/brand/logo-full-light.png" alt="Чё? Шашлык, на главную" width="900" height="399"></a>
+    <a href="/"><img class="foot__logo" src="/assets/brand/logo-full-light-small.webp" alt="Чё? Шашлык, на главную" width="900" height="399"></a>
+    <nav class="foot__links" aria-label="Навигация"><a href="/#menu">Меню</a><a href="/#map">Контакты</a><button type="button" data-cookie-settings>Настройки cookie</button></nav>
     <p class="foot__legal">ИП Егоян Лиана Давидовна · ИНН 263217153001 · ОГРНИП 326265100107094</p>
   </footer>
 </main>
-<script src="/assets/js/typo.js"></script>
+    <div
+      class="cookie"
+      id="cookie-banner"
+      role="region"
+      aria-label="Уведомление об использовании cookie"
+      hidden
+    >
+      <div class="cookie__text">
+        <p class="cookie__title">Сайт использует cookie</p>
+        <p>
+          Яндекс Метрика помогает нам улучшать сайт.
+        </p>
+        <details class="cookie__details">
+          <summary>Подробнее об обработке данных</summary>
+          <p class="cookie__legal">
+          Нажимая «Принять», вы соглашаетесь, что ИП Егоян Л. Д. обрабатывает
+          cookie, IP-адрес и данные о действиях на сайте с помощью Яндекс
+          Метрики по
+          <a href="/privacy.html#cookie">политике конфиденциальности</a>.
+          Передумать можно в «Настройках cookie» внизу страницы.
+          </p>
+        </details>
+      </div>
+      <div class="cookie__btns">
+        <button type="button" class="b b--fill b--sm" data-cookie="yes">
+          Принять
+        </button>
+        <button type="button" class="b b--sm" data-cookie="no">
+          Только необходимые
+        </button>
+      </div>
+    </div>
+
+<script defer src="/assets/js/typo.js"></script>
+<script defer src="/assets/js/config.js"></script>
+<script defer src="/assets/js/analytics.js"></script>
 </body>
 </html>

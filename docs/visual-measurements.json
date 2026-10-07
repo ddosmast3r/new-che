@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-07",
+  "version": "Large interior photos, brand typography and compact consent notice",
+  "url": "http://127.0.0.1:8766/",
+  "lighthouseVersion": "13.5.0",
+  "fetchTime": "2026-10-07T08:22:25.823Z",
+  "formFactor": "mobile",
+  "throttlingMethod": "simulate",
+  "scores": {
+    "performance": 90,
+    "accessibility": 100,
+    "best-practices": 100,
+    "seo": 100
+  },
+  "metrics": {
+    "first-contentful-paint": {
+      "value": 1829.56185,
+      "unit": "millisecond"
+    },
+    "largest-contentful-paint": {
+      "value": 3349.26975,
+      "unit": "millisecond"
+    },
+    "total-blocking-time": {
+      "value": 63,
+      "unit": "millisecond"
+    },
+    "cumulative-layout-shift": {
+      "value": 0,
+      "unit": "unitless"
+    },
+    "speed-index": {
+      "value": 3434.902590732686,
+      "unit": "millisecond"
+    }
+  },
+  "note": "Single local laboratory run; not field Core Web Vitals or a production measurement."
+}
